@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Music Visualisation</title>
+	</head>
+	<body>
+		<audio id="audioElement" src="Test.mp3"></audio>
+		<div>
+			<button onclick="document.getElementById('audioElement').play()">PLAY</button>
+			<button onclick="document.getElementById('audioElement').pause()">PAUSE</button>
+			<button onclick="document.getElementById('audioElement').volume+=0.1">Vol +</button>
+      		<button onclick="document.getElementById('audioElement').volume-=0.1">Vol -</button>
+      		<button class="jscolor { valueElement: null, value:'ff0000', onFineChange:'setTextColor(this)'}">
+				Set Bar color
+			</button>
+		</div>
+
+		<script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+		<script src="jscolor.js"></script>
+		<script type="text/javascript" src="main.js"></script>
+	</body>
+</html>
