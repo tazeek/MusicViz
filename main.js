@@ -63,3 +63,20 @@ var bar_color = "#ff0000";
 function setTextColor(picker) {
     bar_color = '#' + picker.toString()
 }
+
+function alterVolume(increase_volume){
+  var audio = document.getElementById('audioElement');
+  var volume = audio.volume;
+
+  if(increase_volume && volume != 1){
+    volume += 0.1; 
+  } else if (!increase_volume && volume != 0){
+    volume -= 0.1;
+  } else {
+    console.log("Volume cannot go out of range");
+  }
+
+  audio.volume = volume.toFixed(2);
+
+  console.log(audio.volume);
+}
