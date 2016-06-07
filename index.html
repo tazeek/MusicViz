@@ -6,6 +6,7 @@
 	<body>
 		<audio id="audioElement" src="Test.mp3"></audio>
 		<div>
+			<input id="audio_file" type="file" accept="audio/*" />
 			<button onclick="document.getElementById('audioElement').play()">PLAY</button>
 			<button onclick="document.getElementById('audioElement').pause()">PAUSE</button>
 			<button onclick="alterVolume(true)">Vol +</button>

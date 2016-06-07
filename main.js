@@ -80,3 +80,10 @@ function alterVolume(increase_volume){
 
   console.log(audio.volume);
 }
+
+audio_file.onchange = function(){
+    var files = this.files;
+    var file = URL.createObjectURL(files[0]); 
+    audioElement.src = file; 
+    //audio_player.play();
+};
