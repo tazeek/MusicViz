@@ -6,13 +6,17 @@
 	<body>
 		<audio id="audioElement" src="Test.mp3"></audio>
 		<div>
-			<input id="audio_file" type="file" accept="audio/*" />
+			<input id="audio_file" type="file" accept="audio/*" placeholder="Upload"/>
 			<button onclick="document.getElementById('audioElement').play()">PLAY</button>
 			<button onclick="document.getElementById('audioElement').pause()">PAUSE</button>
 			<button onclick="alterVolume(true)">Vol +</button>
       		<button onclick="alterVolume(false)">Vol -</button>
-      		<button class="jscolor { valueElement: null, value:'ff0000', onFineChange:'setTextColor(this)'}">
-				Set Bar color
+      		<button class="jscolor { valueElement: null, value:'ff0000', onFineChange:'setBarColor(this)'}">
+				Set Bar Color
+			</button>
+
+			<button class="jscolor { valueElement: null, value: 'ffffff', onFineChange:'setBodyColor(this)' }">
+				Set Body Color
 			</button>
 		</div>
 

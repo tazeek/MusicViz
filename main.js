@@ -60,8 +60,13 @@ var bar_color = "#ff0000";
 
 }());
 
-function setTextColor(picker) {
-    bar_color = '#' + picker.toString()
+function setBarColor(picker) {
+    bar_color = '#' + picker.toString();
+}
+
+function setBodyColor(picker) {
+  var body_color = '#' + picker.toString();
+  d3.select("body").style("background-color", body_color);
 }
 
 function alterVolume(increase_volume){
@@ -73,17 +78,14 @@ function alterVolume(increase_volume){
   } else if (!increase_volume && volume != 0){
     volume -= 0.1;
   } else {
-    console.log("Volume cannot go out of range");
+    return;
   }
 
   audio.volume = volume.toFixed(2);
-
-  console.log(audio.volume);
 }
 
 audio_file.onchange = function(){
     var files = this.files;
     var file = URL.createObjectURL(files[0]); 
     audioElement.src = file; 
-    //audio_player.play();
 };
