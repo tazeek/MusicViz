@@ -60,6 +60,18 @@ var bar_color = "#ff0000";
 
 }());
 
+function playPause(){
+  var audio = document.getElementById('audioElement');
+
+  if(audio.paused){
+    audio.play();
+    d3.select("#playButton").html("PAUSE");
+  } else {
+    audio.pause();
+    d3.select("#playButton").html("PLAY");
+  }
+}
+
 function setBarColor(picker) {
     bar_color = '#' + picker.toString();
 }

@@ -7,8 +7,7 @@
 		<audio id="audioElement" src="Test.mp3"></audio>
 		<div>
 			<input id="audio_file" type="file" accept="audio/*" placeholder="Upload"/>
-			<button onclick="document.getElementById('audioElement').play()">PLAY</button>
-			<button onclick="document.getElementById('audioElement').pause()">PAUSE</button>
+			<button id="playButton" onclick="playPause()">PLAY</button>
 			<button onclick="alterVolume(true)">Vol +</button>
       		<button onclick="alterVolume(false)">Vol -</button>
       		<button class="jscolor { valueElement: null, value:'ff0000', onFineChange:'setBarColor(this)'}">
