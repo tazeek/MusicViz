@@ -72,6 +72,7 @@ function playPause(){
   }
 }
 
+//Fired twice when the volume slider is dragged
 function setVolume(){
   var audio = document.getElementById('audioElement');
   var currentVolume = d3.select("#volumeSlider").property("value");
@@ -79,15 +80,19 @@ function setVolume(){
   audio.volume = currentVolume/100;
 }
 
+//Set color of bars
 function setBarColor(picker) {
     bar_color = '#' + picker.toString();
 }
 
+//Set color of body
 function setBodyColor(picker) {
   var body_color = '#' + picker.toString();
   d3.select("body").style("background-color", body_color);
 }
 
+
+//Fired when file is uploaded
 audio_file.onchange = function(){
     var files = this.files;
     var file = URL.createObjectURL(files[0]); 
