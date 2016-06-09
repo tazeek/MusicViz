@@ -8,8 +8,7 @@
 		<div>
 			<input id="audio_file" type="file" accept="audio/*" placeholder="Upload"/>
 			<button id="playButton" onclick="playPause()">PLAY</button>
-			<button onclick="alterVolume(true)">Vol +</button>
-      		<button onclick="alterVolume(false)">Vol -</button>
+			<input id="volumeSlider" type="range" min="0" max="100" value="50" step="1" onchange="setVolume()">
       		<button class="jscolor { valueElement: null, value:'ff0000', onFineChange:'setBarColor(this)'}">
 				Set Bar Color
 			</button>
