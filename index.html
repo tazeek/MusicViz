@@ -6,10 +6,10 @@
 		<script src="jscolor.js"></script>
 	</head>
 	<body>
-		<audio id="audioElement" onloadedmetadata="totalDuration()" ontimeupdate="playTime()"></audio>
+		<audio id="audioElement" onloadedmetadata="totalDuration()" ontimeupdate="playTime()" onended="replay()"></audio>
 		<div>
 			<input id="audio_file" type="file" accept="audio/*"/>
-			<input id="musicSlider" type="range" min="0" max="100" value="0" step="1" onchange="musicSeek()" onclick="musicSeek()">
+			<input id="musicSlider" type="range" min="0" max="100" value="0" step="1" onchange="musicSeek()" oninput="musicSeek()">
 
 			<span id="currentDuration">0:00</span>/<span id="musicDuration">0:00</span>
 

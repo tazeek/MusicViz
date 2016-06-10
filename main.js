@@ -75,6 +75,10 @@ function totalDuration(){
   d3.select("#musicDuration").html(total_duration);
 }
 
+function replay(){
+  var audio = document.getElementById('audioElement');
+  audio.play();
+}
 
 function musicSeek(){
   var audio = document.getElementById('audioElement');
