@@ -109,5 +109,7 @@ function setBodyColor(picker) {
 audio_file.onchange = function(){
     var files = this.files;
     var file = URL.createObjectURL(files[0]); 
-    audioElement.src = file; 
+    audioElement.src = file;
+    audioElement.play();
+    d3.select("#playButton").html("PAUSE"); 
 };
