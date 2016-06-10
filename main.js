@@ -68,7 +68,9 @@ function totalDuration(){
   var minutes = Math.floor(audio.duration / 60);
   var seconds = Math.floor(audio.duration - (minutes * 60));
 
-  var total_duration = "0" +minutes.toString() + ":" + seconds.toString();
+  if(seconds < 10) { seconds = "0" + seconds; }
+
+  var total_duration = minutes.toString() + ":" + seconds;
 
   d3.select("#musicDuration").html(total_duration);
 }
