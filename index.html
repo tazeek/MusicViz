@@ -4,9 +4,10 @@
 		<title>Music Visualisation</title>
 	</head>
 	<body>
-		<audio id="audioElement" src="Test.mp3"></audio>
+		<audio id="audioElement" src="Test.mp3" onloadedmetadata="totalDuration()"></audio>
 		<div>
 			<input id="audio_file" type="file" accept="audio/*"/>
+			<span id="musicDuration">00:00</span>
 			<button id="playButton" onclick="playPause()">PLAY</button>
 			<input id="volumeSlider" type="range" min="0" max="100" value="50" step="1" onchange="setVolume()" oninput="setVolume()">
       		<button class="jscolor { valueElement: null, value:'ff0000', onFineChange:'setBarColor(this)'}">

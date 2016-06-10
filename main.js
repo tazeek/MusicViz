@@ -60,6 +60,19 @@ var bar_color = "#ff0000";
 
 }());
 
+
+function totalDuration(){
+
+  var audio = document.getElementById('audioElement');
+
+  var minutes = Math.floor(audio.duration / 60);
+  var seconds = Math.floor(audio.duration - (minutes * 60));
+
+  var total_duration = "0" +minutes.toString() + ":" + seconds.toString();
+
+  d3.select("#musicDuration").html(total_duration);
+}
+
 function playPause(){
   var audio = document.getElementById('audioElement');
 
