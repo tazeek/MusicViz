@@ -60,7 +60,7 @@ var bar_color = "#ff0000";
 
 }());
 
-
+//Find the total duration of a soundtrack
 function totalDuration(){
 
   var audio = document.getElementById('audioElement');
@@ -75,6 +75,34 @@ function totalDuration(){
   d3.select("#musicDuration").html(total_duration);
 }
 
+
+function musicSeek(){
+  var audio = document.getElementById('audioElement');
+  var audio_seeker = document.getElementById('musicSlider');
+
+  var seek_to = audio.duration * (audio_seeker.value/100);
+  audio.currentTime = seek_to;
+}
+
+//Handle when music is playing
+function playTime(){
+  var audio = document.getElementById('audioElement');
+  var audio_seeker = document.getElementById('musicSlider');
+
+  var finished = audio.currentTime * (100/audio.duration);
+  audio_seeker.value = finished;
+
+  var minutes = Math.floor(audio.currentTime / 60);
+  var seconds = Math.floor(audio.currentTime - (minutes * 60));
+
+  if (seconds < 10 ) { seconds = "0" + seconds; }
+
+  var current_duration = minutes.toString() + ":" + seconds;
+
+  d3.select("#currentDuration").html(current_duration);
+}
+
+//Handle Play and Pause events
 function playPause(){
   var audio = document.getElementById('audioElement');
 
