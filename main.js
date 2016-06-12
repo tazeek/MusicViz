@@ -7,6 +7,83 @@ var bar_color = "#ff0000";
   var audioSrc = audioCtx.createMediaElementSource(audioElement);
   var analyser = audioCtx.createAnalyser();
 
+  //Global variables of the local function
+  var audio, volume, button, seeker, file;
+
+  function initialize(){
+    audio = document.getElementById('audioElement');
+    volume = document.getElementById('volumeSlider');
+    button = document.getElementById('playButton');
+    seeker = document.getElementById('musicSlider');
+    file = document.getElementById('audio_file');
+
+    audio.addEventListener('loadedmetadata', totalTime);
+    audio.addEventListener('timeupdate',currentTime);
+    audio.addEventListener('ended', replay);
+    seeker.addEventListener('input', seek)
+    button.addEventListener('click', buttonEffect);
+    volume.addEventListener('input', changeVolume);
+    file.addEventListener('change', uploaded);
+  }
+
+  function seek(){
+    var seek_to = audio.duration * (seeker.value/100);
+    audio.currentTime = seek_to;
+  }
+
+  function changeVolume(){
+    var currentVolume = d3.select("#volumeSlider").property("value");
+
+    audio.volume = currentVolume/100;
+  }
+
+  function buttonEffect(){
+    if(audio.paused){
+      audio.play();
+      d3.select("#playButton").html("PAUSE");
+    } else {
+      audio.pause();
+      d3.select("#playButton").html("PLAY");
+    }
+  }
+
+  function uploaded(){
+    var files = this.files;
+    var file = URL.createObjectURL(files[0]); 
+    audioElement.src = file;
+    audioElement.play();
+    d3.select("#playButton").html("PAUSE"); 
+  }
+
+  function replay(){
+    audio.play();
+  }
+
+  function currentTime(){
+    var finished = audio.currentTime * (100/audio.duration);
+    seeker.value = finished;
+
+    var minutes = Math.floor(audio.currentTime / 60);
+    var seconds = Math.floor(audio.currentTime - (minutes * 60));
+
+    if (seconds < 10 ) { seconds = "0" + seconds; }
+
+    var current_duration = minutes.toString() + ":" + seconds;
+
+    d3.select("#currentDuration").html(current_duration);
+  }
+
+  function totalTime(){
+    var minutes = Math.floor(audio.duration / 60);
+    var seconds = Math.floor(audio.duration - (minutes * 60));
+
+    if(seconds < 10) { seconds = "0" + seconds; }
+
+    var total_duration = minutes.toString() + ":" + seconds;
+
+    d3.select("#musicDuration").html(total_duration);
+  }
+
   // Bind our analyser to the media element source.
   audioSrc.connect(analyser);
   audioSrc.connect(audioCtx.destination);
@@ -56,76 +133,10 @@ var bar_color = "#ff0000";
   }
 
   // Run the loop
+  initialize();
   renderChart();
 
 }());
-
-//Find the total duration of a soundtrack
-function totalDuration(){
-
-  var audio = document.getElementById('audioElement');
-
-  var minutes = Math.floor(audio.duration / 60);
-  var seconds = Math.floor(audio.duration - (minutes * 60));
-
-  if(seconds < 10) { seconds = "0" + seconds; }
-
-  var total_duration = minutes.toString() + ":" + seconds;
-
-  d3.select("#musicDuration").html(total_duration);
-}
-
-function replay(){
-  var audio = document.getElementById('audioElement');
-  audio.play();
-}
-
-function musicSeek(){
-  var audio = document.getElementById('audioElement');
-  var audio_seeker = document.getElementById('musicSlider');
-
-  var seek_to = audio.duration * (audio_seeker.value/100);
-  audio.currentTime = seek_to;
-}
-
-//Handle when music is playing
-function playTime(){
-  var audio = document.getElementById('audioElement');
-  var audio_seeker = document.getElementById('musicSlider');
-
-  var finished = audio.currentTime * (100/audio.duration);
-  audio_seeker.value = finished;
-
-  var minutes = Math.floor(audio.currentTime / 60);
-  var seconds = Math.floor(audio.currentTime - (minutes * 60));
-
-  if (seconds < 10 ) { seconds = "0" + seconds; }
-
-  var current_duration = minutes.toString() + ":" + seconds;
-
-  d3.select("#currentDuration").html(current_duration);
-}
-
-//Handle Play and Pause events
-function playPause(){
-  var audio = document.getElementById('audioElement');
-
-  if(audio.paused){
-    audio.play();
-    d3.select("#playButton").html("PAUSE");
-  } else {
-    audio.pause();
-    d3.select("#playButton").html("PLAY");
-  }
-}
-
-//Fired twice when the volume slider is dragged
-function setVolume(){
-  var audio = document.getElementById('audioElement');
-  var currentVolume = d3.select("#volumeSlider").property("value");
-
-  audio.volume = currentVolume/100;
-}
 
 //Set color of bars
 function setBarColor(picker) {
@@ -137,13 +148,3 @@ function setBodyColor(picker) {
   var body_color = '#' + picker.toString();
   d3.select("body").style("background-color", body_color);
 }
-
-
-//Fired when file is uploaded
-audio_file.onchange = function(){
-    var files = this.files;
-    var file = URL.createObjectURL(files[0]); 
-    audioElement.src = file;
-    audioElement.play();
-    d3.select("#playButton").html("PAUSE"); 
-};
