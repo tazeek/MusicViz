@@ -8,7 +8,7 @@ var bar_color = "#ff0000";
   var analyser = audioCtx.createAnalyser();
 
   //Global variables of the local function
-  var audio, volume, button, seeker, file, body;
+  var audio, volume, button, seeker, file, body, uploaded_files, song_index = 0;
 
   function initialize(){
     audio = document.getElementById('audioElement');
@@ -25,8 +25,8 @@ var bar_color = "#ff0000";
     button.addEventListener('click', buttonEffect);
     volume.addEventListener('input', changeVolume);
     file.addEventListener('change', uploaded);
-    //body.addEventListener('drop', filesDrop);
-    //body.addEventListener('dragover', filesDrag);
+    body.addEventListener('drop', filesDrop);
+    body.addEventListener('dragover', filesDrag);
   }
 
   function filesDrag(evt){
@@ -34,11 +34,25 @@ var bar_color = "#ff0000";
     evt.stopPropagation();
   }
 
-  function filesDrop(){
+  function filesDrop(evt){
     evt.preventDefault();
     evt.stopPropagation();
 
-    console.log("DROPPED");
+    uploaded_files = evt.dataTransfer.files;
+
+    var first_song = URL.createObjectURL(uploaded_files[song_index]);
+    audio.src = first_song;
+    audio.play();
+
+    d3.select("#playButton").html("PAUSE");  
+    var track = [];
+
+    for(i = 0; i < uploaded_files.length; i++){
+      var song = uploaded_files[i].name;
+      track.push(song);
+    }
+
+    console.log(track);  
   }
 
   function seek(){
@@ -71,6 +85,14 @@ var bar_color = "#ff0000";
   }
 
   function replay(){
+    song_index++;
+
+    if(song_index === uploaded_files.length){
+      song_index = 0;
+    }
+
+    var next_song = URL.createObjectURL(uploaded_files[song_index]);
+    audio.src = next_song;
     audio.play();
   }
 
@@ -163,22 +185,3 @@ function setBodyColor(picker) {
   var body_color = '#' + picker.toString();
   d3.select("body").style("background-color", body_color);
 }
-
-//HERE
-var body = document.getElementById('drop_zone');
-
-body.addEventListener('dragover', function(evt){
-  evt.preventDefault();
-  evt.stopPropagation();
-});
-
-body.addEventListener('drop', function(evt){
-  evt.preventDefault();
-  evt.stopPropagation();
-  var files = evt.dataTransfer.files;
-
-  var file = URL.createObjectURL(files[0]);
-  audioElement.src = file;
-  audioElement.play();
-  d3.select("#playButton").html("PAUSE"); 
-});
