@@ -8,7 +8,7 @@ var bar_color = "#ff0000";
   var analyser = audioCtx.createAnalyser();
 
   //Global variables of the local function
-  var audio, volume, button, seeker, file;
+  var audio, volume, button, seeker, file, body;
 
   function initialize(){
     audio = document.getElementById('audioElement');
@@ -16,6 +16,7 @@ var bar_color = "#ff0000";
     button = document.getElementById('playButton');
     seeker = document.getElementById('musicSlider');
     file = document.getElementById('audio_file');
+    body = document.getElementById('drop_zone');
 
     audio.addEventListener('loadedmetadata', totalTime);
     audio.addEventListener('timeupdate',currentTime);
@@ -24,6 +25,20 @@ var bar_color = "#ff0000";
     button.addEventListener('click', buttonEffect);
     volume.addEventListener('input', changeVolume);
     file.addEventListener('change', uploaded);
+    //body.addEventListener('drop', filesDrop);
+    //body.addEventListener('dragover', filesDrag);
+  }
+
+  function filesDrag(evt){
+    evt.preventDefault();
+    evt.stopPropagation();
+  }
+
+  function filesDrop(){
+    evt.preventDefault();
+    evt.stopPropagation();
+
+    console.log("DROPPED");
   }
 
   function seek(){
@@ -148,3 +163,22 @@ function setBodyColor(picker) {
   var body_color = '#' + picker.toString();
   d3.select("body").style("background-color", body_color);
 }
+
+//HERE
+var body = document.getElementById('drop_zone');
+
+body.addEventListener('dragover', function(evt){
+  evt.preventDefault();
+  evt.stopPropagation();
+});
+
+body.addEventListener('drop', function(evt){
+  evt.preventDefault();
+  evt.stopPropagation();
+  var files = evt.dataTransfer.files;
+
+  var file = URL.createObjectURL(files[0]);
+  audioElement.src = file;
+  audioElement.play();
+  d3.select("#playButton").html("PAUSE"); 
+});
