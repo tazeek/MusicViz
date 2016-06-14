@@ -8,7 +8,10 @@ var bar_color = "#ff0000";
   var analyser = audioCtx.createAnalyser();
 
   //Global variables of the local function
-  var audio, volume, button, seeker, file, body, uploaded_files, prev_button, next_button, song_index = 0;
+  var audio, volume, button, seeker, file, prev_button, next_button;
+  var song_index = 0;
+  var soundtrack = [];
+  var playlist = d3.select('#playlist').append('ul');
 
   function initialize(){
     audio = document.getElementById('audioElement');
@@ -16,7 +19,6 @@ var bar_color = "#ff0000";
     button = document.getElementById('playButton');
     seeker = document.getElementById('musicSlider');
     file = document.getElementById('audio_file');
-    body = document.getElementById('drop_zone');
     prev_button = document.getElementById('prevSong');
     next_button = document.getElementById('nextSong');
 
@@ -29,9 +31,9 @@ var bar_color = "#ff0000";
     button.addEventListener('click', buttonEffect);
     volume.addEventListener('input', changeVolume);
     file.addEventListener('change', uploaded);
-    body.addEventListener('dragenter', filesDrag);
-    body.addEventListener('dragover', filesDrag);
-    body.addEventListener('drop', filesDrop);
+    window.addEventListener('dragenter', filesDrag);
+    window.addEventListener('dragover', filesDrag);
+    window.addEventListener('drop', filesDrop);
   }
 
   function filesDrag(evt){
@@ -43,48 +45,59 @@ var bar_color = "#ff0000";
     audio.pause();
     song_index = i;
 
-    var next_song = URL.createObjectURL(uploaded_files[song_index]);
+    var next_song = URL.createObjectURL(soundtrack[song_index]);
     audio.src = next_song;
     d3.select("#currentDuration").html("0:00");
     audio.play();
   }
 
+  function updatePlayList(uploaded_files){
+
+    for(i = 0; i < uploaded_files.length; i++){
+      soundtrack.push(uploaded_files[i]);
+    }
+
+    soundtrack = _.uniq(soundtrack, function(d) { return d.name;});
+  }
+
   function addPlayList(){
 
-    var playlist = d3.select('#playlist').append('ul');
-    
     var songs = playlist.selectAll('li')
-            .data(uploaded_files);
+            .data(soundtrack);
 
     songs.enter()
           .append('li')
-          .html(function(d) { return d.name; })
+          .html(function(d) { console.log(d.name); return d.name; })
           .on('mouseover', function() { d3.select(this).style("color","steelblue");})
           .on('mouseout', function() { d3.select(this).style("color","black");})
           .on('dblclick', songClicked);
-  
   }
 
   function filesDrop(evt){
     evt.stopPropagation();
     evt.preventDefault();
 
-    uploaded_files = evt.dataTransfer.files;
-    //addPlayList();
+    var uploaded_files = evt.dataTransfer.files;
 
-    var first_song = URL.createObjectURL(uploaded_files[song_index]);
-    audio.src = first_song;
-    audio.play();
+    if(soundtrack.length === 0){
+
+      var first_song = URL.createObjectURL(uploaded_files[song_index]);
+      audio.src = first_song;
+      audio.play();
+
+    }
+
+    updatePlayList(uploaded_files);
+
+    addPlayList();
 
     d3.select("#playButton").html("PAUSE");  
     var track = [];
 
-    for(i = 0; i < uploaded_files.length; i++){
+    /*for(i = 0; i < uploaded_files.length; i++){
       var song = uploaded_files[i].name;
       track.push(song);
-    }
-
-    console.log(track);  
+    }*/ 
   }
 
   function seek(){
@@ -122,11 +135,11 @@ var bar_color = "#ff0000";
     song_index--;
 
     if(song_index === -1){
-      var last_song_index = uploaded_files.length - 1;
+      var last_song_index = soundtrack.length - 1;
       song_index = last_song_index;
     }
 
-    var next_song = URL.createObjectURL(uploaded_files[song_index]);
+    var next_song = URL.createObjectURL(soundtrack[song_index]);
     audio.src = next_song;
     audio.play();
   }
@@ -140,11 +153,11 @@ var bar_color = "#ff0000";
 
     song_index++;
 
-    if(song_index === uploaded_files.length){
+    if(song_index === soundtrack.length){
       song_index = 0;
     }
 
-    var next_song = URL.createObjectURL(uploaded_files[song_index]);
+    var next_song = URL.createObjectURL(soundtrack[song_index]);
     audio.src = next_song;
     audio.play();
   }
