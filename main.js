@@ -44,6 +44,9 @@ var bar_color = "#ff0000";
 
     uploaded_files = evt.dataTransfer.files;
 
+    var playlist = d3.select('#playlist').append('ul');
+    playlist.selectAll('li').data(uploaded_files).enter().append('li').html(function(d) { return d.name; });
+
     var first_song = URL.createObjectURL(uploaded_files[song_index]);
     audio.src = first_song;
     audio.play();
@@ -160,7 +163,7 @@ var bar_color = "#ff0000";
     return d3.select(parent).append('svg').attr('height', height).attr('width', width);
   }
 
-  var svg = createSvg('body', svgHeight, svgWidth);
+  var svg = createSvg('#graph', svgHeight, svgWidth);
 
   // Create our initial D3 chart.
   svg.selectAll('rect')
