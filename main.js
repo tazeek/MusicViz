@@ -8,7 +8,7 @@ var bar_color = "#ff0000";
   var analyser = audioCtx.createAnalyser();
 
   //Global variables of the local function
-  var audio, volume, button, seeker, file, body, uploaded_files, song_index = 0;
+  var audio, volume, button, seeker, file, body, uploaded_files, prev_button, next_button, song_index = 0;
 
   function initialize(){
     audio = document.getElementById('audioElement');
@@ -17,10 +17,14 @@ var bar_color = "#ff0000";
     seeker = document.getElementById('musicSlider');
     file = document.getElementById('audio_file');
     body = document.getElementById('drop_zone');
+    prev_button = document.getElementById('prevSong');
+    next_button = document.getElementById('nextSong');
 
     audio.addEventListener('loadedmetadata', totalTime);
     audio.addEventListener('timeupdate',currentTime);
-    audio.addEventListener('ended', replay);
+    audio.addEventListener('ended', playNext);
+    next_button.addEventListener('click', playNext);
+    prev_button.addEventListener('click', playPrev);
     seeker.addEventListener('input', seek)
     button.addEventListener('click', buttonEffect);
     volume.addEventListener('input', changeVolume);
@@ -84,7 +88,28 @@ var bar_color = "#ff0000";
     d3.select("#playButton").html("PAUSE"); 
   }
 
-  function replay(){
+  function playPrev(){
+    audio.pause();
+    d3.select("#currentDuration").html("0:00");
+    song_index--;
+
+    if(song_index === -1){
+      var last_song_index = uploaded_files.length - 1;
+      song_index = last_song_index;
+    }
+
+    var next_song = URL.createObjectURL(uploaded_files[song_index]);
+    audio.src = next_song;
+    audio.play();
+  }
+
+  function playNext(){
+
+    if(!audio.paused){
+      audio.pause();
+      d3.select("#currentDuration").html("0:00");
+    }
+
     song_index++;
 
     if(song_index === uploaded_files.length){
