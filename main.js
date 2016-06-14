@@ -29,23 +29,48 @@ var bar_color = "#ff0000";
     button.addEventListener('click', buttonEffect);
     volume.addEventListener('input', changeVolume);
     file.addEventListener('change', uploaded);
-    body.addEventListener('drop', filesDrop);
+    body.addEventListener('dragenter', filesDrag);
     body.addEventListener('dragover', filesDrag);
+    body.addEventListener('drop', filesDrop);
   }
 
   function filesDrag(evt){
-    evt.preventDefault();
     evt.stopPropagation();
+    evt.preventDefault();
+  }
+
+  function songClicked(d, i){
+    audio.pause();
+    song_index = i;
+
+    var next_song = URL.createObjectURL(uploaded_files[song_index]);
+    audio.src = next_song;
+    d3.select("#currentDuration").html("0:00");
+    audio.play();
+  }
+
+  function addPlayList(){
+
+    var playlist = d3.select('#playlist').append('ul');
+    
+    var songs = playlist.selectAll('li')
+            .data(uploaded_files);
+
+    songs.enter()
+          .append('li')
+          .html(function(d) { return d.name; })
+          .on('mouseover', function() { d3.select(this).style("color","steelblue");})
+          .on('mouseout', function() { d3.select(this).style("color","black");})
+          .on('dblclick', songClicked);
+  
   }
 
   function filesDrop(evt){
-    evt.preventDefault();
     evt.stopPropagation();
+    evt.preventDefault();
 
     uploaded_files = evt.dataTransfer.files;
-
-    var playlist = d3.select('#playlist').append('ul');
-    playlist.selectAll('li').data(uploaded_files).enter().append('li').html(function(d) { return d.name; });
+    //addPlayList();
 
     var first_song = URL.createObjectURL(uploaded_files[song_index]);
     audio.src = first_song;
