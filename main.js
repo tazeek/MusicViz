@@ -42,6 +42,12 @@ var bar_color = "#ff0000";
   }
 
   function songClicked(d, i){
+    if(i == song_index){
+      return;
+    }
+    
+    d3.select(this).style("color","green");
+    d3.select(".song"+song_index).style("color","black");
     audio.pause();
     song_index = i;
 
@@ -67,13 +73,18 @@ var bar_color = "#ff0000";
 
     songs.enter()
           .append('li')
-          .html(function(d) { console.log(d.name); return d.name; })
+          .attr('class', function(d,i) { return "song" + i.toString();})
+          .html(function(d) { return d.name; })
           .on('mouseover', function() { d3.select(this).style("color","steelblue");})
-          .on('mouseout', function() { d3.select(this).style("color","black");})
+          .on('mouseout', function(d,i) { 
+            var color = (i == song_index) ? "green" : "black";
+            d3.select(this).style("color",color);
+          })
           .on('dblclick', songClicked);
   }
 
   function filesDrop(evt){
+
     evt.stopPropagation();
     evt.preventDefault();
 
@@ -84,20 +95,14 @@ var bar_color = "#ff0000";
       var first_song = URL.createObjectURL(uploaded_files[song_index]);
       audio.src = first_song;
       audio.play();
-
+      d3.select("#playButton").html("PAUSE");
     }
 
     updatePlayList(uploaded_files);
 
-    addPlayList();
+    addPlayList();  
+    d3.select(".song0").style("color","green");
 
-    d3.select("#playButton").html("PAUSE");  
-    var track = [];
-
-    /*for(i = 0; i < uploaded_files.length; i++){
-      var song = uploaded_files[i].name;
-      track.push(song);
-    }*/ 
   }
 
   function seek(){
@@ -151,6 +156,8 @@ var bar_color = "#ff0000";
       d3.select("#currentDuration").html("0:00");
     }
 
+    d3.select(".song"+song_index).style("color","black");
+
     song_index++;
 
     if(song_index === soundtrack.length){
@@ -160,6 +167,7 @@ var bar_color = "#ff0000";
     var next_song = URL.createObjectURL(soundtrack[song_index]);
     audio.src = next_song;
     audio.play();
+    d3.select(".song"+song_index).style("color","green");
   }
 
   function currentTime(){
