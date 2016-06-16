@@ -8,7 +8,7 @@ var bar_color = "#ff0000";
   var analyser = audioCtx.createAnalyser();
 
   //Global variables of the local function
-  var audio, volume, button, seeker, file, prev_button, next_button;
+  var audio, volume, button, seeker, file, prev_button, next_button, replay, random;
   var song_index = 0;
   var soundtrack = [];
   var playlist = d3.select('#playlist').append('ul');
@@ -21,6 +21,8 @@ var bar_color = "#ff0000";
     file = document.getElementById('audio_file');
     prev_button = document.getElementById('prevSong');
     next_button = document.getElementById('nextSong');
+    replay = document.getElementById('replayCheck');
+    random = document.getElementById('randomCheck');
 
     audio.addEventListener('loadedmetadata', totalTime);
     audio.addEventListener('timeupdate',currentTime);
@@ -45,7 +47,7 @@ var bar_color = "#ff0000";
     if(i == song_index){
       return;
     }
-    
+
     d3.select(this).style("color","green");
     d3.select(".song"+song_index).style("color","black");
     audio.pause();
@@ -135,8 +137,8 @@ var bar_color = "#ff0000";
   }
 
   function playPrev(){
-    audio.pause();
-    d3.select("#currentDuration").html("0:00");
+    //audio.pause();
+    //d3.select("#currentDuration").html("0:00");
     song_index--;
 
     if(song_index === -1){
@@ -149,11 +151,24 @@ var bar_color = "#ff0000";
     audio.play();
   }
 
-  function playNext(){
+  function playNext(evt){
 
-    if(!audio.paused){
-      audio.pause();
-      d3.select("#currentDuration").html("0:00");
+    var trigger = evt.target.id;
+
+    switch(trigger){
+      case "nextSong": {
+        console.log("NEXT SONG!");
+        break;
+      }
+      case "prevSong": {
+        console.log("PREV SONG!");
+        break;
+      }
+
+      default: {
+        console.log("SONG ENDED!");
+        break;
+      }
     }
 
     d3.select(".song"+song_index).style("color","black");
