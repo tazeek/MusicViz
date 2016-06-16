@@ -26,9 +26,9 @@ var bar_color = "#ff0000";
 
     audio.addEventListener('loadedmetadata', totalTime);
     audio.addEventListener('timeupdate',currentTime);
-    audio.addEventListener('ended', playNext);
-    next_button.addEventListener('click', playNext);
-    prev_button.addEventListener('click', playPrev);
+    audio.addEventListener('ended', changeSong);
+    next_button.addEventListener('click', changeSong);
+    prev_button.addEventListener('click', changeSong);
     seeker.addEventListener('input', seek)
     button.addEventListener('click', buttonEffect);
     volume.addEventListener('input', changeVolume);
@@ -151,32 +151,35 @@ var bar_color = "#ff0000";
     audio.play();
   }
 
-  function playNext(evt){
+  function changeSong(evt){
 
     var trigger = evt.target.id;
+    d3.select(".song"+song_index).style("color","black");
 
     switch(trigger){
-      case "nextSong": {
-        console.log("NEXT SONG!");
-        break;
-      }
+
       case "prevSong": {
-        console.log("PREV SONG!");
+
+        song_index--;
+
+        if(song_index === -1){
+          var last_song_index = soundtrack.length - 1;
+          song_index = last_song_index;
+        }
+
         break;
       }
 
       default: {
-        console.log("SONG ENDED!");
+
+        song_index++;
+
+        if(song_index === soundtrack.length){
+          song_index = 0;
+        }
+
         break;
       }
-    }
-
-    d3.select(".song"+song_index).style("color","black");
-
-    song_index++;
-
-    if(song_index === soundtrack.length){
-      song_index = 0;
     }
 
     var next_song = URL.createObjectURL(soundtrack[song_index]);
