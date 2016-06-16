@@ -136,24 +136,15 @@ var bar_color = "#ff0000";
     d3.select("#playButton").html("PAUSE"); 
   }
 
-  function playPrev(){
-    //audio.pause();
-    //d3.select("#currentDuration").html("0:00");
-    song_index--;
-
-    if(song_index === -1){
-      var last_song_index = soundtrack.length - 1;
-      song_index = last_song_index;
-    }
-
-    var next_song = URL.createObjectURL(soundtrack[song_index]);
-    audio.src = next_song;
-    audio.play();
-  }
-
   function changeSong(evt){
 
     var trigger = evt.target.id;
+
+    if(replay.checked && trigger == "audioElement"){
+      audio.play();
+      return;
+    }
+
     d3.select(".song"+song_index).style("color","black");
 
     switch(trigger){
