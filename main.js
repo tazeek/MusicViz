@@ -163,8 +163,14 @@ var bar_color = "#ff0000";
 
       default: {
 
-        song_index++;
+        if(random.checked){
+          song_index = Math.floor(Math.random()*soundtrack.length);
+        } else {
+          song_index++;
+        }
 
+        console.log(song_index);
+        
         if(song_index === soundtrack.length){
           song_index = 0;
         }
