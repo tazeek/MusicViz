@@ -55,8 +55,24 @@ var bar_color = "#ff0000";
 
     var next_song = URL.createObjectURL(soundtrack[song_index]);
     audio.src = next_song;
-    d3.select("#currentDuration").html("0:00");
     audio.play();
+  }
+
+  function deleteSong(d,i){
+    var delete_index = i;
+    var song_name = soundtrack[delete_index].name;
+    console.log(i, song_name);
+    soundtrack = _.reject(soundtrack, function(d,i) { return soundtrack[i].name === song_name;});
+    console.log(soundtrack);
+
+    if(delete_index == song_index){
+      audio.pause();
+      audio.currentTime = 0;
+      d3.select("#currentDuration").html("0:00");
+      d3.select("#musicDuration").html("0:00");
+    }
+
+    d3.select(".song"+i)).remove();
   }
 
   function updatePlayList(uploaded_files){
@@ -75,14 +91,20 @@ var bar_color = "#ff0000";
 
     songs.enter()
           .append('li')
-          .attr('class', function(d,i) { return "song" + i.toString();})
+          .attr('class', function(d,i) { return "song" + i;})
           .html(function(d) { return d.name; })
           .on('mouseover', function() { d3.select(this).style("color","steelblue");})
           .on('mouseout', function(d,i) { 
             var color = (i == song_index) ? "green" : "black";
             d3.select(this).style("color",color);
           })
-          .on('dblclick', songClicked);
+          .on('dblclick', songClicked)
+          .append('a')
+          .attr('href','#')
+          .text("X")
+          .on('click', deleteSong);
+
+    songs.exit().remove();
   }
 
   function filesDrop(evt){
@@ -170,7 +192,7 @@ var bar_color = "#ff0000";
         }
 
         console.log(song_index);
-        
+
         if(song_index === soundtrack.length){
           song_index = 0;
         }
